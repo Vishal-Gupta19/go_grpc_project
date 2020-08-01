@@ -17,7 +17,7 @@ type Grpc struct {
 }
 
 // HighScore : Take any high value to start
-var HighScore = 9999999999.0
+var HighScore = 999999999.0
 
 // NewServer ...
 func NewServer(address string) *Grpc {
