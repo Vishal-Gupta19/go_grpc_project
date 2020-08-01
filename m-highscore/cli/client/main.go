@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 
+	"time"
+
 	pbhighscore "github.com/Vishal-Gupta19/go_grpc_project/m-apis/version1"
 	"github.com/rs/zerolog/log"
 	"golang.org/x/net/context"
@@ -18,12 +20,22 @@ func main() {
 		log.Fatal().Err(err).Str("address", *addressPtr).Msg("Failed to dial m-highscore gRPC service")
 	}
 
+	defer func() {
+		err := conn.Close()
+		if err != nil {
+			log.Error().Err(err).Str("address", *addressPtr).Msg("Failed to close connection")
+		}
+	}()
+
+	timeoutCtx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+
 	c := pbhighscore.NewGameClient(conn)
 	if c == nil {
 		log.Info().Msg("Client nil")
 	}
 
-	r, err := c.GetHighScore(context.Background(), &pbhighscore.GetHighScoreRequest{})
+	r, err := c.GetHighScore(timeoutCtx, &pbhighscore.GetHighScoreRequest{})
 	if err != nil {
 		log.Fatal().Err(err).Str("address", *addressPtr).Msg("Failed to get a response")
 	} else if r != nil {
