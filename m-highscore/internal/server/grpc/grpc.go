@@ -2,8 +2,10 @@ package grpc
 
 import (
 	"context"
+	"net"
 
 	pbhighscore "github.com/Vishal-Gupta19/go_grpc_project/m-apis/version1"
+	"github.com/pkg/errors"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc"
 )
@@ -16,6 +18,13 @@ type Grpc struct {
 
 // HighScore : Take any high value to start
 var HighScore = 9999999999.0
+
+// NewServer ...
+func NewServer(address string) *Grpc {
+	return &Grpc{
+		address: address,
+	}
+}
 
 // SetHighScore API
 func (g *Grpc) SetHighScore(ctx context.Context, input *pbhighscore.SetHighScoreRequest) (*pbhighscore.SetHighScoreResponse, error) {
@@ -32,4 +41,29 @@ func (g *Grpc) GetHighScore(ctx context.Context, input *pbhighscore.GetHighScore
 	return &pbhighscore.GetHighScoreResponse{
 		HighScore: HighScore,
 	}, nil
+}
+
+// ListenAndServe : To start the service
+func (g *Grpc) ListenAndServe() error {
+	lis, err := net.Listen("tcp", g.address)
+	if err != nil {
+		return errors.Wrap(err, "Failed to open tcp port")
+	}
+
+	// Initialize the server
+	serverOpts := []grpc.ServerOption{}
+	g.srv = grpc.NewServer(serverOpts...)
+
+	// Register Grpc struct with Server
+	pbhighscore.RegisterGameServer(g.srv, g)
+
+	log.Info().Str("address", g.address).Msg("Starting gRPC server for m-highscore microservice")
+
+	// Start serving
+	err = g.srv.Serve(lis)
+	if err != nil {
+		return errors.Wrap(err, "failed to start gRPC server for m-highscore microservice")
+	}
+
+	return nil
 }
