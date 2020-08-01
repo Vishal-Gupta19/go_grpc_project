@@ -1,6 +1,6 @@
 // Command to compile : "protoc --go_out=plugins=grpc:. *.proto"
 syntax = "proto3";
-package m.highscore.v1;
+package m.highscore.version1;
 
 option go_package = "game";
 

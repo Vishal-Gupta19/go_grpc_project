@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	var addressPtr = flag.String("address", "locahost:50051", "address to connect")
+	var addressPtr = flag.String("address", "localhost:50051", "address to connect")
 	flag.Parse()
 
 	conn, err := grpc.Dial(*addressPtr, grpc.WithInsecure())
@@ -26,10 +26,8 @@ func main() {
 	r, err := c.GetHighScore(context.Background(), &pbhighscore.GetHighScoreRequest{})
 	if err != nil {
 		log.Fatal().Err(err).Str("address", *addressPtr).Msg("Failed to get a response")
-	}
-
-	if r != nil {
-		log.Info().Interface("hinghscore", r.GetHighScore()).Msg("Highscore from m-highscore microservice")
+	} else if r != nil {
+		log.Info().Interface("highscore", r.GetHighScore()).Msg("Highscore from m-highscore microservice")
 	} else {
 		log.Error().Msg("Couldnot get highscore")
 	}
