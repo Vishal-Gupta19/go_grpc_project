@@ -4,7 +4,7 @@ import (
 	"context"
 	"net"
 
-	pbhighscore "github.com/Vishal-Gupta19/go_grpc_project/m-apis/version1"
+	pbhighscore "github.com/Vishal-Gupta19/go_grpc_project/m-apis/m-highscore/version1"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc"

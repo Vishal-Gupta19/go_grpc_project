@@ -5,7 +5,7 @@ import (
 
 	"time"
 
-	pbhighscore "github.com/Vishal-Gupta19/go_grpc_project/m-apis/version1"
+	pbhighscore "github.com/Vishal-Gupta19/go_grpc_project/m-apis/m-highscore/version1"
 	"github.com/rs/zerolog/log"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
